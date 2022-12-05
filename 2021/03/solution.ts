@@ -38,6 +38,7 @@ const findAnswers = (entries: string[][], isLog = true) => {
 
   // Part One
   const partOne = entries.map(e => e[0].split('').map(i => intval(i)))
+  const partTwo = entries.map(e => e[0].split('').map(i => intval(i)))
 
   const length = partOne.length
 
@@ -56,14 +57,42 @@ const findAnswers = (entries: string[][], isLog = true) => {
   answers.a = gamma_num
 
   // Part 2
+  
+  const mostCommonBit = (arr: number[][], idx : number) => {
+    const res = arr.map(bits => bits[idx]).reduce((acc, idx) => acc + idx, 0)
+    return res >= arr.length / 2 ? 1 : 0
+  }
 
+  const findOxy = (arr : number[][], idx : number) => {
+    const bit = mostCommonBit(arr, idx)
+    const res = arr.filter(r => r[idx] === bit)
+    if (res.length > 1) {
+      idx++
+      return findOxy(res, idx)
+    }
+    return res
+  }
+  const findCo = (arr : number[][], idx : number) => {
+    const bit = mostCommonBit(arr, idx) === 1 ? 0 : 1
+    const res = arr.filter(r => r[idx] === bit)
+    if (res.length > 1) {
+      idx++
+      return findCo(res, idx)
+    }
+    return res
+  }
+
+  const resultOxy = parseInt(findOxy(partTwo, 0)[0].join(''), 2)
+  const resultCo = parseInt(findCo(partTwo, 0)[0].join(''), 2)
+
+  answers.b = resultOxy * resultCo
 
 
 
   if (isLog) {
-    log('sum', sum)
-    log('gamma', gamma_num)
-    log(partOne);
+    // log(partTwo);
+    log(resultOxy)
+    log(resultCo)
   }
   return answers;
 };
@@ -83,7 +112,7 @@ const testPart2 = async (input: string): Promise<boolean> => {
   const puzzle_input = await puzzle.parseInput(input);
   const answers = findAnswers(puzzle_input.blocks[0]);
 
-  return answers.b == 1 ? true : false;
+  return answers.b == 230 ? true : false;
 };
 const solvePart2 = async (): Promise<number> => {
   const puzzle_input = await puzzle.parseInput();
@@ -106,9 +135,9 @@ const test_input = `
 01010
 `;
 
-const part1_correct = await testPart1(test_input);
-const part1 = await solvePart1();
-log("    part 1: ", part1, part1_correct);
-// const part2_correct = await testPart2(test_input);
-// const part2 = await solvePart2();
-// log("    part 2: ", part2, part2_correct);
+// const part1_correct = await testPart1(test_input);
+// const part1 = await solvePart1();
+// log("    part 1: ", part1, part1_correct);
+const part2_correct = await testPart2(test_input);
+const part2 = await solvePart2();
+log("    part 2: ", part2, part2_correct);

@@ -8,10 +8,16 @@ const findAnswers = (entries: string[][], isLog = true) => {
       a: 0,
       b: 0,
     };
+  // Part One
 
 
 
-  if (isLog) log(entries);
+  // Part Two
+
+
+  if (isLog) {
+    log(entries);
+  }
   return answers;
 };
 const testPart1 = async (input: string): Promise<boolean> => {
