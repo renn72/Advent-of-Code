@@ -2,6 +2,8 @@
 import { intval, log, logList } from "../../tools.ts";
 // @ts-ignore
 import { puzzle } from "../../puzzle.ts";
+// @ts-ignore
+import type { Puzzle } from "../../puzzle.ts"
 
 const findAnswers = (entries: string[][], isLog = true) => {
   const answers = {

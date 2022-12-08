@@ -268,16 +268,24 @@ Find somewhere safe to land your submarine. What is the first step on which no s
 import { intval, log, logList } from "../../tools.ts";
 // @ts-ignore
 import { puzzle } from "../../puzzle.ts";
+// @ts-ignore
+import type { Puzzle } from "../../puzzle.ts"
 
 const findAnswers = (entries: string[][], isLog = true) => {
   const answers = {
       a: 0,
       b: 0,
     };
+  // Part One
 
 
 
-  if (isLog) log(entries);
+  // Part Two
+
+
+  if (isLog) {
+    log(entries);
+  }
   return answers;
 };
 const testPart1 = async (input: string): Promise<boolean> => {

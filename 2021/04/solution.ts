@@ -61,37 +61,87 @@ const findAnswers = (entries: string[][], isLog = true) => {
       b: 0,
     };
 
+  // @ts-ignore
+  const parsed_entries = entries.map(e => e.map(e => e.map(e  => intval(e))))
+
+  const draw = parsed_entries[0][0]
+  const cards = parsed_entries.slice(1)
+
+  const findWinner = (card : number[]) => {
+    return false
+  }
+
+  
+  const drawn_num : number[] = []
+  let winning_num = 0
+  let winning_card : number[] = []
+
+  for (const num of draw) {
+    drawn_num.push(intval(num))
+
+    let isWon = false
+    let card_num = 0
+    for  (const card of cards) {
+      if (findWinner(card)) {
+        winning_card = card
+        winning_num = num
+      }
+    }
+  }
 
 
-  if (isLog) log(entries);
+
+  if (isLog) {
+    log(draw)
+    log(cards)
+    log(drawn_num)
+  }
   return answers;
 };
 const testPart1 = async (input: string): Promise<boolean> => {
   const puzzle_input = await puzzle.parseInput(input);
-  const answers = findAnswers(puzzle_input.blocks[0]);
+  const answers = findAnswers(puzzle_input.blocks);
 
-  return answers.a == 1 ? true : false;
+  return answers.a == 4512 ? true : false;
 };
 const solvePart1 = async (): Promise<number> => {
   const puzzle_input = await puzzle.parseInput();
-  const answers = findAnswers(puzzle_input.blocks[0], false);
+  const answers = findAnswers(puzzle_input.blocks, false);
 
   return answers.a;
 };
 const testPart2 = async (input: string): Promise<boolean> => {
   const puzzle_input = await puzzle.parseInput(input);
-  const answers = findAnswers(puzzle_input.blocks[0]);
+  const answers = findAnswers(puzzle_input.blocks);
 
   return answers.b == 1 ? true : false;
 };
 const solvePart2 = async (): Promise<number> => {
   const puzzle_input = await puzzle.parseInput();
-  const answers = findAnswers(puzzle_input.blocks[0], false);
+  const answers = findAnswers(puzzle_input.blocks, false);
 
   return answers.b;
 };
 const test_input = `
+7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20,8,19,3,26,1
 
+22 13 17 11  0
+ 8  2 23  4 24
+21  9 14 16  7
+ 6 10  3 18  5
+ 1 12 20 15 19
+
+ 3 15  0  2 22
+ 9 18 13 17  5
+19  8  7 25 23
+20 11 10 24  4
+14 21 16 12  6
+
+14 21 17 24  4
+10 16 15  9 19
+18  8 23 26 20
+22 11 13  6  5
+ 2  0 12  3  7
 `;
 
 const part1_correct = await testPart1(test_input);

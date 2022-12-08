@@ -1,4 +1,4 @@
-interface Puzzle {
+export interface Puzzle {
   filepath: string;
   input: string;
   entries: string[];
