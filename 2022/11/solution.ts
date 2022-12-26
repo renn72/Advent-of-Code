@@ -216,54 +216,159 @@ import { puzzle } from "../../puzzle.ts";
 // @ts-ignore
 import type { Puzzle } from "../../puzzle.ts"
 
-const findAnswers = (entries: string[][], isLog = true) => {
+const findAnswers = (entries: string[][][], isLog = true) => {
   const answers = {
-      a: 0,
-      b: 0,
-    };
+    a: 0,
+    b: 0,
+  };
   // Part One
 
+  const monkeys = entries.map((e): {
+    items: number[],
+    operator: string,
+    operator_num: string,
+    test: number,
+    isTrue: number,
+    isFalse: number,
+    inspected: number
+  } => {
+    const items = e[1].slice(2).map(num => intval(num.replace(',', '')))
+    const operator = e[2].slice(4, 5)[0]
+    const operator_num = e[2].slice(5)[0]
+    const test = intval(e[3].slice(3)[0])
+    const isTrue = intval(e[4].slice(5)[0])
+    const isFalse = intval(e[5].slice(5)[0])
+
+    return {
+      items: items,
+      operator: operator,
+      operator_num: operator_num,
+      test: test,
+      isTrue: isTrue,
+      isFalse: isFalse,
+      inspected: 0
+    }
+  })
+
+  // for (let i = 0; i < 20; i++) {
+  //   for (const monkey of monkeys) {
+  //     for (const item of monkey.items) {
+  //       monkey.inspected++
+  //       let worry = 0
+  //       let num = monkey.operator_num == 'old' ? item : intval(monkey.operator_num)
+  //
+  //       if (monkey.operator === '+') {
+  //         worry = item + num
+  //       } else {
+  //         worry = item * num
+  //       }
+  //       let newWorry = Math.floor(worry / 3)
+  //       if (newWorry % monkey.test == 0) {
+  //         monkeys[monkey.isTrue].items.push(newWorry)
+  //       } else {
+  //         monkeys[monkey.isFalse].items.push(newWorry)
+  //       }
+  //     }
+  //     monkey.items = []
+  //   }
+  // }
+  //
+  // const inspected = monkeys.map(m => m.inspected).sort((a, b) => b - a)
+  //
+  // answers.a = inspected[0] * inspected[1]
 
 
   // Part Two
 
+  for (let i = 0; i < 10000; i++) {
+    for (const monkey of monkeys) {
+      for (const item of monkey.items) {
+        monkey.inspected++
+        let worry = 0
+        let num = monkey.operator_num == 'old' ? item : intval(monkey.operator_num)
+
+        if (monkey.operator === '+') {
+          worry = item + num
+        } else {
+          worry = item * num
+        }
+        let newWorry = worry % 9699690
+        if (newWorry % monkey.test == 0) {
+          monkeys[monkey.isTrue].items.push(newWorry)
+        } else {
+          monkeys[monkey.isFalse].items.push(newWorry)
+        }
+      }
+      monkey.items = []
+    }
+  }
+
+  const inspected = monkeys.map(m => m.inspected).sort((a, b) => b - a)
+  answers.b = inspected[0] * inspected[1]
 
   if (isLog) {
-    log(entries);
+    log(monkeys)
+    log(inspected)
   }
   return answers;
 };
 const testPart1 = async (input: string): Promise<boolean> => {
   const puzzle_input = await puzzle.parseInput(input);
-  const answers = findAnswers(puzzle_input.blocks[0]);
+  const answers = findAnswers(puzzle_input.blocks);
 
-  return answers.a == 1 ? true : false;
+  return answers.a == 10605 ? true : false;
 };
 const solvePart1 = async (): Promise<number> => {
   const puzzle_input = await puzzle.parseInput();
-  const answers = findAnswers(puzzle_input.blocks[0], false);
+  const answers = findAnswers(puzzle_input.blocks, false);
 
   return answers.a;
 };
 const testPart2 = async (input: string): Promise<boolean> => {
   const puzzle_input = await puzzle.parseInput(input);
-  const answers = findAnswers(puzzle_input.blocks[0]);
+  const answers = findAnswers(puzzle_input.blocks);
 
   return answers.b == 1 ? true : false;
 };
 const solvePart2 = async (): Promise<number> => {
   const puzzle_input = await puzzle.parseInput();
-  const answers = findAnswers(puzzle_input.blocks[0], false);
+  const answers = findAnswers(puzzle_input.blocks, false);
 
   return answers.b;
 };
 const test_input = `
+Monkey 0:
+  Starting items: 79, 98
+  Operation: new = old * 19
+  Test: divisible by 23
+    If true: throw to monkey 2
+    If false: throw to monkey 3
 
+Monkey 1:
+  Starting items: 54, 65, 75, 74
+  Operation: new = old + 6
+  Test: divisible by 19
+    If true: throw to monkey 2
+    If false: throw to monkey 0
+
+Monkey 2:
+  Starting items: 79, 60, 97
+  Operation: new = old * old
+  Test: divisible by 13
+    If true: throw to monkey 1
+    If false: throw to monkey 3
+
+Monkey 3:
+  Starting items: 74
+  Operation: new = old + 3
+  Test: divisible by 17
+    If true: throw to monkey 0
+    If false: throw to monkey 1
 `;
 
-const part1_correct = await testPart1(test_input);
-const part1 = await solvePart1();
-log("    part 1: ", part1, part1_correct);
-// const part2_correct = await testPart2(test_input);
-// const part2 = await solvePart2();
-// log("    part 2: ", part2, part2_correct);
+// const part1_correct = await testPart1(test_input);
+// const part1 = await solvePart1();
+// log("    part 1: ", part1, part1_correct);
+const part2_correct = await testPart2(test_input);
+const part2 = await solvePart2();
+log("    part 2: ", part2, part2_correct);
