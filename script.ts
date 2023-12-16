@@ -8,7 +8,7 @@ const options = {
   solution_filename: "solution.ts",
   input_filename: "input.txt",
   boilerplate_filename: "boilerplate.txt",
-  year: "2021",
+  year: "2023",
   first_day: 1,
   last_day: 25,
   cookie: "",

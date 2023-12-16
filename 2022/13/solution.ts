@@ -133,7 +133,7 @@ const testPart1 = async (input: string): Promise<boolean> => {
   const puzzle_input = await puzzle.parseInput(input);
   const answers = findAnswers(puzzle_input.blocks[0]);
 
-  return answers.a == 1 ? true : false;
+  return answers.a == 13 ? true : false;
 };
 const solvePart1 = async (): Promise<number> => {
   const puzzle_input = await puzzle.parseInput();
@@ -154,7 +154,29 @@ const solvePart2 = async (): Promise<number> => {
   return answers.b;
 };
 const test_input = `
+[1,1,3,1,1]
+[1,1,5,1,1]
 
+[[1],[2,3,4]]
+[[1],4]
+
+[9]
+[[8,7,6]]
+
+[[4,4],4,4]
+[[4,4],4,4,4]
+
+[7,7,7,7]
+[7,7,7]
+
+[]
+[3]
+
+[[[]]]
+[[]]
+
+[1,[2,[3,[4,[5,6,7]]]],8,9]
+[1,[2,[3,[4,[5,6,0]]]],8,9]
 `;
 
 const part1_correct = await testPart1(test_input);
