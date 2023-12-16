@@ -21,28 +21,98 @@ Here is an example engine schematic:
 In this schematic, two numbers are not part numbers because they are not adjacent to a symbol: 114 (top right) and 58 (middle right). Every other number is adjacent to a symbol and so is a part number; their sum is 4361.
 Of course, the actual engine schematic is much larger. What is the sum of all of the part numbers in the engine schematic?
 
+--- Part Two ---
+The engineer finds the missing part and installs it in the engine! As the engine springs to life, you jump in the closest gondola, finally ready to ascend to the water source.
+
+You don't seem to be going very fast, though. Maybe something is still wrong? Fortunately, the gondola has a phone labeled "help", so you pick it up and the engineer answers.
+
+Before you can explain the situation, she suggests that you look out the window. There stands the engineer, holding a phone in one hand and waving with the other. You're going so slowly that you haven't even left the station. You exit the gondola.
+
+The missing part wasn't the only issue - one of the gears in the engine is wrong. A gear is any * symbol that is adjacent to exactly two part numbers. Its gear ratio is the result of multiplying those two numbers together.
+
+This time, you need to find the gear ratio of every gear and add them all up so that the engineer can figure out which gear needs to be replaced.
+
+Consider the same engine schematic again:
+
+467..114..
+...*......
+..35..633.
+......#...
+617*......
+.....+.58.
+..592.....
+......755.
+...$.*....
+.664.598..
+In this schematic, there are two gears. The first is in the top left; it has part numbers 467 and 35, so its gear ratio is 16345. The second gear is in the lower right; its gear ratio is 451490. (The * adjacent to 617 is not a gear because it is only adjacent to one part number.) Adding up all of the gear ratios produces 467835.
+
+What is the sum of all of the gear ratios in your engine schematic?
+
 */
 // @ts-ignore
 import { intval, log, logList } from "../../tools.ts";
 // @ts-ignore
 import { puzzle } from "../../puzzle.ts";
 // @ts-ignore
-import type { Puzzle } from "../../puzzle.ts"
+import type { Puzzle } from "../../puzzle.ts";
 
 const findAnswers = (entries: string[][], isLog = true) => {
   const answers = {
-      a: 0,
-      b: 0,
-    };
+    a: 0,
+    b: 0,
+  };
   // Part One
 
+  const hasSymbol = (s: string) => {
+    if (s?.length && s.split("").find((i) => isNaN(parseInt(i)) && i !== "."))
+      return true;
+    return false;
+  };
 
+  const input = entries.map((row) => row[0]);
+
+  let row = input.length;
+  let col = input[0].length;
+
+  let parts = [] as number[]
+
+  for (let i = 0; i < row; i++) {
+    for (let j = 0; j < col; j++) {
+      if (isNaN(parseInt(input[i][j]))) continue;
+
+      let part = input[i][j];
+
+      while (++j < col) {
+        if (isNaN(parseInt(input[i][j]))) break;
+        part += input[i][j];
+      }
+
+      const top =
+        i === 0 ? "" : input[i - 1].substring(j - part.length - 1, j + 1);
+      const bottom =
+        i === row - 1 ? "" : input[i + 1].substring(j - part.length - 1, j + 1);
+      const left = input[i][j - part.length - 1] || "";
+      const right = input[i][j] || "";
+
+      if (
+        hasSymbol(top) ||
+        hasSymbol(bottom) ||
+        hasSymbol(left) ||
+        hasSymbol(right)
+      ) {
+        parts.push(parseInt(part));
+      }
+    }
+  }
+
+  answers.a = parts.reduce((a, b) => a + b, 0);
 
   // Part Two
 
-
   if (isLog) {
+    log(input);
     log(entries);
+    log(answers.a);
   }
   return answers;
 };
@@ -50,7 +120,7 @@ const testPart1 = async (input: string): Promise<boolean> => {
   const puzzle_input = await puzzle.parseInput(input);
   const answers = findAnswers(puzzle_input.blocks[0]);
 
-  return answers.a == 1 ? true : false;
+  return answers.a == 4361 ? true : false;
 };
 const solvePart1 = async (): Promise<number> => {
   const puzzle_input = await puzzle.parseInput();
@@ -71,7 +141,16 @@ const solvePart2 = async (): Promise<number> => {
   return answers.b;
 };
 const test_input = `
-
+467..114..
+...*......
+..35..633.
+......#...
+617*......
+.....+.58.
+..592.....
+......755.
+...$.*....
+.664.598..
 `;
 
 const part1_correct = await testPart1(test_input);
