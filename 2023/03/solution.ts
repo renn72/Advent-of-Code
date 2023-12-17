@@ -69,12 +69,32 @@ const findAnswers = (entries: string[][], isLog = true) => {
     return false;
   };
 
+  const isGearRatio = (s: string) => {
+    if (s?.length && !isNaN(parseInt(s))) return true;
+    return false;
+  };
+
+  const gearsDic = {} as { [key: string]: number[] };
+
+  const findGears = (s, n, i, j) => {
+    j = j === -1 ? 0 : j;
+    for (let k = 0; k < s.length; k++) {
+      const ch = s.charAt(k);
+      if (ch === "*") {
+        const ind = `${i}-${j + k}`;
+        gearsDic[ind] = gearsDic[ind]
+          ? [...gearsDic[ind], parseInt(n)]
+          : [parseInt(n)];
+      }
+    }
+  };
+
   const input = entries.map((row) => row[0]);
 
   let row = input.length;
   let col = input[0].length;
 
-  let parts = [] as number[]
+  let parts = [] as number[];
 
   for (let i = 0; i < row; i++) {
     for (let j = 0; j < col; j++) {
@@ -108,11 +128,36 @@ const findAnswers = (entries: string[][], isLog = true) => {
   answers.a = parts.reduce((a, b) => a + b, 0);
 
   // Part Two
+  //
+  for (let i = 0; i < row; i++) {
+    for (let j = 0; j < col; j++) {
+      if (isNaN(parseInt(input[i][j]))) continue;
+
+      let ratio = input[i][j];
+      while (++j < col) {
+        if (isNaN(parseInt(input[i][j]))) break;
+        ratio += input[i][j];
+      }
+      const top =
+        i === 0 ? "" : input[i - 1].substring(j - ratio.length - 1, j + 1);
+      const btm =
+        i === row - 1 ? "" : input[i + 1].substring(j - ratio.length - 1, j + 1);
+      const lft = input[i][j - ratio.length - 1] || "";
+      const rgt = input[i][j] || "";
+
+      findGears(top, ratio, i - 1, j - ratio.length - 1);
+      findGears(btm, ratio, i + 1, j - ratio.length - 1);
+      findGears(lft, ratio, i, j - ratio.length - 1);
+      findGears(rgt, ratio, i, j);
+    }
+  }
+
+  answers.b = Object.values(gearsDic).filter((i) => i.length === 2).map(i => i[0] * i[1]).reduce((a, b) => a + b, 0);
 
   if (isLog) {
     log(input);
     log(entries);
-    log(answers.a);
+    log(gearsDic)
   }
   return answers;
 };
@@ -132,7 +177,7 @@ const testPart2 = async (input: string): Promise<boolean> => {
   const puzzle_input = await puzzle.parseInput(input);
   const answers = findAnswers(puzzle_input.blocks[0]);
 
-  return answers.b == 1 ? true : false;
+  return answers.b == 467835 ? true : false;
 };
 const solvePart2 = async (): Promise<number> => {
   const puzzle_input = await puzzle.parseInput();
@@ -153,9 +198,9 @@ const test_input = `
 .664.598..
 `;
 
-const part1_correct = await testPart1(test_input);
-const part1 = await solvePart1();
-log("    part 1: ", part1, part1_correct);
-// const part2_correct = await testPart2(test_input);
-// const part2 = await solvePart2();
-// log("    part 2: ", part2, part2_correct);
+// const part1_correct = await testPart1(test_input);
+// const part1 = await solvePart1();
+// log("    part 1: ", part1, part1_correct);
+const part2_correct = await testPart2(test_input);
+const part2 = await solvePart2();
+log("    part 2: ", part2, part2_correct);
