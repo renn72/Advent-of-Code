@@ -146,7 +146,6 @@ const findAnswers = (entries: string[][][], isLog = true) => {
   const loc = [] as number[];
 
   for (let i = 0; i < input.seeds.length; i++) {
-    break;
     let seed = input.seeds[i];
 
     // seed to soil
@@ -157,7 +156,6 @@ const findAnswers = (entries: string[][][], isLog = true) => {
     if (soil) {
       seedToSoil = soil[0] + seed - soil[1];
     }
-    if (isLog && seed == 79) log("seed to soil", seedToSoil);
 
     // soil to fertilizer
     let fertilizer = input.soilToFertilizer.find(
@@ -167,7 +165,6 @@ const findAnswers = (entries: string[][][], isLog = true) => {
     if (fertilizer) {
       soilToFertilizer = fertilizer[0] + seedToSoil - fertilizer[1];
     }
-    if (isLog && seed == 79) log("soil to fertilizer", soilToFertilizer);
 
     // fertilizer to water
     let water = input.fertilizerToWater.find(
@@ -177,7 +174,6 @@ const findAnswers = (entries: string[][][], isLog = true) => {
     if (water) {
       fertilizerToWater = water[0] + soilToFertilizer - water[1];
     }
-    if (isLog && seed == 79) log("fertilizer to water", fertilizerToWater);
 
     // water to light
     let light = input.waterToLight.find(
@@ -187,7 +183,6 @@ const findAnswers = (entries: string[][][], isLog = true) => {
     if (light) {
       waterToLight = light[0] + fertilizerToWater - light[1];
     }
-    if (isLog && seed == 79) log("water to light", waterToLight);
 
     // light to temperature
     let temperature = input.lightToTemperature.find(
@@ -197,7 +192,6 @@ const findAnswers = (entries: string[][][], isLog = true) => {
     if (temperature) {
       lightToTemperature = temperature[0] + waterToLight - temperature[1];
     }
-    if (isLog && seed == 79) log("light to temperature", lightToTemperature);
 
     // temperature to humidity
     let humidity = input.temperatureToHumidity.find(
@@ -207,8 +201,6 @@ const findAnswers = (entries: string[][][], isLog = true) => {
     if (humidity) {
       temperatureToHumidity = humidity[0] + lightToTemperature - humidity[1];
     }
-    if (isLog && seed == 79)
-      log("temperature to humidity", temperatureToHumidity);
 
     // humidity to location
     let location = input.humidityToLocation.find(
@@ -220,7 +212,6 @@ const findAnswers = (entries: string[][][], isLog = true) => {
     if (location) {
       humidityToLocation = location[0] + temperatureToHumidity - location[1];
     }
-    if (isLog && seed == 79) log("humidity to location", humidityToLocation);
     loc.push(humidityToLocation);
   }
 
@@ -237,7 +228,6 @@ const findAnswers = (entries: string[][][], isLog = true) => {
     if (soil) {
       seedToSoil = soil[0] + seed - soil[1];
     }
-    if (isLog && seed == 79) log("seed to soil", seedToSoil);
 
     // soil to fertilizer
     let fertilizer = input.soilToFertilizer.find(
@@ -247,7 +237,6 @@ const findAnswers = (entries: string[][][], isLog = true) => {
     if (fertilizer) {
       soilToFertilizer = fertilizer[0] + seedToSoil - fertilizer[1];
     }
-    if (isLog && seed == 79) log("soil to fertilizer", soilToFertilizer);
 
     // fertilizer to water
     let water = input.fertilizerToWater.find(
@@ -257,7 +246,6 @@ const findAnswers = (entries: string[][][], isLog = true) => {
     if (water) {
       fertilizerToWater = water[0] + soilToFertilizer - water[1];
     }
-    if (isLog && seed == 79) log("fertilizer to water", fertilizerToWater);
 
     // water to light
     let light = input.waterToLight.find(
@@ -267,7 +255,6 @@ const findAnswers = (entries: string[][][], isLog = true) => {
     if (light) {
       waterToLight = light[0] + fertilizerToWater - light[1];
     }
-    if (isLog && seed == 79) log("water to light", waterToLight);
 
     // light to temperature
     let temperature = input.lightToTemperature.find(
@@ -277,7 +264,6 @@ const findAnswers = (entries: string[][][], isLog = true) => {
     if (temperature) {
       lightToTemperature = temperature[0] + waterToLight - temperature[1];
     }
-    if (isLog && seed == 79) log("light to temperature", lightToTemperature);
 
     // temperature to humidity
     let humidity = input.temperatureToHumidity.find(
@@ -287,8 +273,6 @@ const findAnswers = (entries: string[][][], isLog = true) => {
     if (humidity) {
       temperatureToHumidity = humidity[0] + lightToTemperature - humidity[1];
     }
-    if (isLog && seed == 79)
-      log("temperature to humidity", temperatureToHumidity);
 
     // humidity to location
     let location = input.humidityToLocation.find(
