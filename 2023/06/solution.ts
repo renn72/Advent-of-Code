@@ -33,25 +33,59 @@ In the third race, you could hold the button for at least 11 milliseconds and no
 To see how much margin of error you have, determine the number of ways you can beat the record in each race; in this example, if you multiply these values together, you get 288 (4 * 8 * 9).
 Determine the number of ways you could beat the record in each race. What do you get if you multiply these numbers together?
 
+Your puzzle answer was 4403592.
+
+The first half of this puzzle is complete! It provides one gold star: *
+
+--- Part Two ---
+As the race is about to start, you realize the piece of paper with race times and record distances you got earlier actually just has very bad kerning. There's really only one race - ignore the spaces between the numbers on each line.
+
+So, the example from before:
+
+Time:      7  15   30
+Distance:  9  40  200
+...now instead means this:
+
+Time:      71530
+Distance:  940200
+Now, you have to figure out how many ways there are to win this single race. In this example, the race lasts for 71530 milliseconds and the record distance you need to beat is 940200 millimeters. You could hold the button anywhere from 14 to 71516 milliseconds and beat the record, a total of 71503 ways!
+
+How many ways can you beat the record in this one much longer race?
+
 */
 // @ts-ignore
 import { intval, log, logList } from "../../tools.ts";
 // @ts-ignore
 import { puzzle } from "../../puzzle.ts";
 // @ts-ignore
-import type { Puzzle } from "../../puzzle.ts"
+import type { Puzzle } from "../../puzzle.ts";
 
 const findAnswers = (entries: string[][], isLog = true) => {
   const answers = {
-      a: 0,
-      b: 0,
-    };
+    a: 0,
+    b: 0,
+  };
   // Part One
+  const calc = (time, record) => {
+    let wins = 0;
+    for (let i = 1; i < time; i++) {
+      const distance = i * (time - i);
+      if (distance > record) wins++;
+    }
+    return wins;
+  };
 
+  let res = 1
+
+  for (let i = 1; i < entries[0].length; i++){
+    res *= calc(+entries[0][i], +entries[1][i])
+
+  }
+
+  answers.a = res
 
 
   // Part Two
-
 
   if (isLog) {
     log(entries);
@@ -62,7 +96,7 @@ const testPart1 = async (input: string): Promise<boolean> => {
   const puzzle_input = await puzzle.parseInput(input);
   const answers = findAnswers(puzzle_input.blocks[0]);
 
-  return answers.a == 1 ? true : false;
+  return answers.a == 288 ? true : false;
 };
 const solvePart1 = async (): Promise<number> => {
   const puzzle_input = await puzzle.parseInput();
@@ -83,7 +117,8 @@ const solvePart2 = async (): Promise<number> => {
   return answers.b;
 };
 const test_input = `
-
+Time:      7  15   30
+Distance:  9  40  200
 `;
 
 const part1_correct = await testPart1(test_input);
