@@ -86,9 +86,26 @@ const findAnswers = (entries: string[][], isLog = true) => {
 
 
   // Part Two
+  const calcb = (time, record) => {
+    for (let i = 1; i < time; i++) {
+      const distance = i * (time - i);
+      if (distance > record) return i
+    }
+    return 0
+  };
+
+  const time = entries[0].slice(1).reduce((a, i) => a + i, '')
+  const distance = entries[1].slice(1).reduce((a, i) => a + i, '')
+
+  const resb = calcb(time, distance)
+
+  answers.b = (+time + 1) - 2*resb
+
 
   if (isLog) {
     log(entries);
+    log(answers.b)
+    log(resb)
   }
   return answers;
 };
@@ -108,7 +125,7 @@ const testPart2 = async (input: string): Promise<boolean> => {
   const puzzle_input = await puzzle.parseInput(input);
   const answers = findAnswers(puzzle_input.blocks[0]);
 
-  return answers.b == 1 ? true : false;
+  return answers.b == 71503 ? true : false;
 };
 const solvePart2 = async (): Promise<number> => {
   const puzzle_input = await puzzle.parseInput();
@@ -121,9 +138,9 @@ Time:      7  15   30
 Distance:  9  40  200
 `;
 
-const part1_correct = await testPart1(test_input);
-const part1 = await solvePart1();
-log("    part 1: ", part1, part1_correct);
-// const part2_correct = await testPart2(test_input);
-// const part2 = await solvePart2();
-// log("    part 2: ", part2, part2_correct);
+// const part1_correct = await testPart1(test_input);
+// const part1 = await solvePart1();
+// log("    part 1: ", part1, part1_correct);
+const part2_correct = await testPart2(test_input);
+const part2 = await solvePart2();
+log("    part 2: ", part2, part2_correct);
